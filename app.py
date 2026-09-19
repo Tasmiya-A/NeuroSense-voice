@@ -1,14 +1,26 @@
 from pathlib import Path
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import joblib
 import numpy as np
 
 from voice_features import extract_features_from_bytes
 
-
 app = FastAPI(title="NeuroSense Voice ML API")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://neurosense1.vercel.app",
+        "http://localhost:8080",
+        "http://localhost:8081",
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "voice_model.joblib"
